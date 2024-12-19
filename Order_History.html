@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .order-item {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Your Order History</h2>
+        <button class="btn btn-danger mb-3" id="customerLogoutBtn">Logout</button>
+        <div id="orderHistoryList"></div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const orderHistoryList = document.getElementById("orderHistoryList");
+            const customerLogoutBtn = document.getElementById("customerLogoutBtn");
+
+            const orderHistory = JSON.parse(localStorage.getItem("orderHistory") || "[]");
+            orderHistoryList.innerHTML = orderHistory.length === 0
+                ? '<p>No orders found.</p>'
+                : orderHistory.map(order => `
+                    <div class="order-item">
+                        <h4>Order ID: ${order.orderId}</h4>
+                        <p>Date: ${new Date(order.date).toLocaleString()}</p>
+                        <p>Total Amount: $${order.totalAmount.toFixed(2)}</p>
+                        <p>Delivery Address: ${order.deliveryAddress}</p>
+                        <p>Phone: ${order.phoneNumber}</p>
+                        <h5>Items:</h5>
+                        <ul>${order.items.map(item => `<li>${item.name} (x${item.quantity})</li>`).join('')}</ul>
+                    </div>
+                `).join('');
+
+            customerLogoutBtn.addEventListener("click", () => {
+                alert("Logged out successfully!");
+                window.location.href = "login.html";
+            });
+        });
+    </script>
+</body>
+</html>
